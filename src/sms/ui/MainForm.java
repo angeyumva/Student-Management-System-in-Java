@@ -37,8 +37,10 @@ public class MainForm extends javax.swing.JFrame {
     }
 }
     public MainForm() {
-        initComponents();
-    }
+    initComponents();
+    dao.createTable();
+    loadStudents();
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -95,10 +97,13 @@ public class MainForm extends javax.swing.JFrame {
         btnAdd.addActionListener(this::btnAddActionPerformed);
 
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(this::btnUpdateActionPerformed);
 
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(this::btnDeleteActionPerformed);
 
         btnClear.setText("Clear");
+        btnClear.addActionListener(this::btnClearActionPerformed);
 
         tblStudents.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -110,7 +115,20 @@ public class MainForm extends javax.swing.JFrame {
             new String [] {
                 "ID", "Name", "Gender", "Course", "Marks"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblStudents.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblStudentsMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblStudents);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -187,18 +205,86 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-int id = Integer.parseInt(txtId.getText());
+int id = Integer.parseInt(txtId.getText().trim());
 String name = txtName.getText();
 String gender = cmbGender.getSelectedItem().toString();
 String course = txtCourse.getText();
-double marks = Double.parseDouble(txtMarks.getText());
+double marks = Double.parseDouble(txtMarks.getText().trim());
 
 Student student = new Student(id, name, gender, course, marks);
-dao.addStudent(student);
+boolean added = dao.addStudent(student);
 
-javax.swing.JOptionPane.showMessageDialog(this, "Student added successfully");
-clearFields(); 
+if (added) {
+    loadStudents();
+    javax.swing.JOptionPane.showMessageDialog(this, "Student added successfully");
+    clearFields();
+}
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+    clearFields();        
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+if (tblStudents.getSelectedRow() == -1) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Select a student from the table first");
+    return;
+}
+        String idText = txtId.getText().trim();
+
+if (idText.isEmpty()) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Enter Student ID first");
+    return;
+}
+
+int id = Integer.parseInt(idText);
+dao.deleteStudent(id);
+loadStudents();
+clearFields();
+javax.swing.JOptionPane.showMessageDialog(this, "Student deleted successfully");       
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+if (tblStudents.getSelectedRow() == -1) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Select a student from the table first");
+    return;
+}
+        String idText = txtId.getText().trim();
+String marksText = txtMarks.getText().trim();
+
+if (idText.isEmpty()) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Enter Student ID first");
+    return;
+}
+
+if (marksText.isEmpty()) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Enter Marks first");
+    return;
+}
+
+int id = Integer.parseInt(idText);
+String name = txtName.getText();
+String gender = cmbGender.getSelectedItem().toString();
+String course = txtCourse.getText();
+double marks = Double.parseDouble(marksText);
+
+Student student = new Student(id, name, gender, course, marks);
+dao.updateStudent(student);
+loadStudents();
+clearFields();
+
+javax.swing.JOptionPane.showMessageDialog(this, "Student updated successfully");
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void tblStudentsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblStudentsMouseClicked
+ int row = tblStudents.getSelectedRow();
+
+txtId.setText(tblStudents.getValueAt(row, 0).toString());
+txtName.setText(tblStudents.getValueAt(row, 1).toString());
+cmbGender.setSelectedItem(tblStudents.getValueAt(row, 2).toString());
+txtCourse.setText(tblStudents.getValueAt(row, 3).toString());
+txtMarks.setText(tblStudents.getValueAt(row, 4).toString());
+    }//GEN-LAST:event_tblStudentsMouseClicked
 
     /**
      * @param args the command line arguments

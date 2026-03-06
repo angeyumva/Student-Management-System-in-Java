@@ -23,7 +23,7 @@ public class StudentDAO {
         }
     }
 
-    public void addStudent(Student student) {
+    public boolean addStudent(Student student) {
         String sql = "INSERT INTO students(id, name, gender, course, marks) VALUES(?, ?, ?, ?, ?)";
 
         try (Connection con = DBConnection.getConnection();
@@ -36,8 +36,10 @@ public class StudentDAO {
             pst.setDouble(5, student.getMarks());
 
             pst.executeUpdate();
+            return true;
         } catch (SQLException e) {
-            System.out.println("Error adding student: " + e.getMessage());
+          javax.swing.JOptionPane.showMessageDialog(null, "Student ID already exists ");
+          return false;
         }
     }
 
