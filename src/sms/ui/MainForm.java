@@ -205,12 +205,19 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-int id = Integer.parseInt(txtId.getText().trim());
-String name = txtName.getText();
-String gender = cmbGender.getSelectedItem().toString();
-String course = txtCourse.getText();
-double marks = Double.parseDouble(txtMarks.getText().trim());
+String idText = txtId.getText().trim();
+String name = txtName.getText().trim();
+String course = txtCourse.getText().trim();
+String marksText = txtMarks.getText().trim();
 
+if (idText.isEmpty() || name.isEmpty() || course.isEmpty() || marksText.isEmpty()) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields");
+    return;
+}
+
+int id = Integer.parseInt(idText);
+String gender = cmbGender.getSelectedItem().toString();
+double marks = Double.parseDouble(marksText);
 Student student = new Student(id, name, gender, course, marks);
 boolean added = dao.addStudent(student);
 
@@ -238,6 +245,16 @@ if (idText.isEmpty()) {
 }
 
 int id = Integer.parseInt(idText);
+int confirm = javax.swing.JOptionPane.showConfirmDialog(
+        this,
+        "Are you sure you want to delete this student?",
+        "Confirm Delete",
+        javax.swing.JOptionPane.YES_NO_OPTION
+);
+
+if (confirm != javax.swing.JOptionPane.YES_OPTION) {
+    return;
+}
 dao.deleteStudent(id);
 loadStudents();
 clearFields();
