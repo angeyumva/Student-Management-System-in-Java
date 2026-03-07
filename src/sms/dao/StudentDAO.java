@@ -129,12 +129,12 @@ public class StudentDAO {
 
     return students;
 }
-    public List<Student> searchStudents(String keyword, boolean maleOnly) {
+public List<Student> searchStudents(String keyword, String genderFilter) {
     List<Student> students = new ArrayList<>();
     String sql;
 
-    if (maleOnly) {
-        sql = "SELECT * FROM students WHERE name LIKE ? AND gender = 'Male'";
+    if (genderFilter != null && !genderFilter.isEmpty()) {
+        sql = "SELECT * FROM students WHERE name LIKE ? AND gender = ?";
     } else {
         sql = "SELECT * FROM students WHERE name LIKE ?";
     }
@@ -143,6 +143,11 @@ public class StudentDAO {
          PreparedStatement pst = con.prepareStatement(sql)) {
 
         pst.setString(1, "%" + keyword + "%");
+
+        if (genderFilter != null && !genderFilter.isEmpty()) {
+            pst.setString(2, genderFilter);
+        }
+
         ResultSet rs = pst.executeQuery();
 
         while (rs.next()) {
