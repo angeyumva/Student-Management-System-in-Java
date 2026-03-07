@@ -129,7 +129,6 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="txtId" min="-2" pref="135" max="-2" attributes="0"/>
                           <Component id="txtName" min="-2" pref="225" max="-2" attributes="0"/>
-                          <Component id="txtCourse" alignment="0" min="-2" pref="213" max="-2" attributes="0"/>
                           <Component id="cmbGender" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
@@ -139,6 +138,7 @@
                               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                               <Component id="txtMarks" min="-2" pref="118" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="cmbCourse" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
@@ -205,7 +205,7 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtCourse" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cmbCourse" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -281,14 +281,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value=" Course"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtCourse">
-      <Properties>
-        <Property name="text" type="java.lang.String" value=" "/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCourseActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
@@ -396,6 +388,21 @@
       <Properties>
         <Property name="text" type="java.lang.String" value=" "/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="cmbCourse">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="4">
+            <StringItem index="0" value="Java"/>
+            <StringItem index="1" value="DBMS"/>
+            <StringItem index="2" value="Networking"/>
+            <StringItem index="3" value="Mathematics"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
