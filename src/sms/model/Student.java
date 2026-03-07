@@ -6,18 +6,19 @@ public class Student {
     private String gender;
     private String course;
     private double marks;
+    private String email;
 
     public Student() {
     }
 
-    public Student(int id, String name, String gender, String course, double marks) {
-        this.id = id;
-        this.name = name;
-        this.gender = gender;
-        this.course = course;
-        this.marks = marks;
-    }
-
+   public Student(int id, String name, String email, String gender, String course, double marks) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.gender = gender;
+    this.course = course;
+    this.marks = marks;
+}
     public int getId() {
         return id;
     }
@@ -57,4 +58,11 @@ public class Student {
     public void setMarks(double marks) {
         this.marks = marks;
     }
+    public String getEmail() {
+    return email;
+}
+
+public void setEmail(String email) {
+    this.email = email;
+}
 }

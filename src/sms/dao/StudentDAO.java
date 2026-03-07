@@ -8,13 +8,13 @@ import java.util.List;
 public class StudentDAO {
 
     public void createTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS students ("
-                + "id INTEGER PRIMARY KEY, "
-                + "name TEXT NOT NULL, "
-                + "gender TEXT NOT NULL, "
-                + "course TEXT NOT NULL, "
-                + "marks REAL NOT NULL)";
-
+       String sql = "CREATE TABLE IF NOT EXISTS students ("
+        + "id INTEGER PRIMARY KEY, "
+        + "name TEXT NOT NULL, "
+        + "email TEXT NOT NULL, "
+        + "gender TEXT NOT NULL, "
+        + "course TEXT NOT NULL, "
+        + "marks REAL NOT NULL)";
         try (Connection con = DBConnection.getConnection();
              Statement stmt = con.createStatement()) {
             stmt.execute(sql);
@@ -24,16 +24,17 @@ public class StudentDAO {
     }
 
     public boolean addStudent(Student student) {
-        String sql = "INSERT INTO students(id, name, gender, course, marks) VALUES(?, ?, ?, ?, ?)";
+      String sql = "INSERT INTO students(id, name, email, gender, course, marks) VALUES(?, ?, ?, ?, ?, ?)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(sql)) {
 
-            pst.setInt(1, student.getId());
-            pst.setString(2, student.getName());
-            pst.setString(3, student.getGender());
-            pst.setString(4, student.getCourse());
-            pst.setDouble(5, student.getMarks());
+           pst.setInt(1, student.getId());
+           pst.setString(2, student.getName());
+           pst.setString(3, student.getEmail());
+           pst.setString(4, student.getGender());
+           pst.setString(5, student.getCourse());
+           pst.setDouble(6, student.getMarks());
 
             pst.executeUpdate();
             return true;
@@ -53,12 +54,15 @@ public class StudentDAO {
 
             while (rs.next()) {
                 Student student = new Student(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("gender"),
-                        rs.getString("course"),
-                        rs.getDouble("marks")
-                );
+                       
+        rs.getInt("id"),
+        rs.getString("name"),
+        rs.getString("email"),
+        rs.getString("gender"),
+        rs.getString("course"),
+        rs.getDouble("marks")
+);
+                
                 students.add(student);
             }
         } catch (SQLException e) {
@@ -69,17 +73,17 @@ public class StudentDAO {
     }
 
     public void updateStudent(Student student) {
-        String sql = "UPDATE students SET name=?, gender=?, course=?, marks=? WHERE id=?";
+        String sql = "UPDATE students SET name=?, email=?, gender=?, course=?, marks=? WHERE id=?";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(sql)) {
 
             pst.setString(1, student.getName());
-            pst.setString(2, student.getGender());
-            pst.setString(3, student.getCourse());
-            pst.setDouble(4, student.getMarks());
-            pst.setInt(5, student.getId());
-
+            pst.setString(2, student.getEmail());
+            pst.setString(3, student.getGender());
+            pst.setString(4, student.getCourse());
+            pst.setDouble(5, student.getMarks());
+            pst.setInt(6, student.getId());
             pst.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error updating student: " + e.getMessage());
