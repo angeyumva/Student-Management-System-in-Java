@@ -8,13 +8,14 @@ import java.util.List;
 public class StudentDAO {
 
     public void createTable() {
-       String sql = "CREATE TABLE IF NOT EXISTS students ("
-        + "id INTEGER PRIMARY KEY, "
-        + "name TEXT NOT NULL, "
-        + "email TEXT NOT NULL, "
-        + "gender TEXT NOT NULL, "
-        + "course TEXT NOT NULL, "
-        + "marks REAL NOT NULL)";
+        String sql = "CREATE TABLE IF NOT EXISTS students ("
+                + "id INTEGER PRIMARY KEY, "
+                + "name TEXT NOT NULL, "
+                + "email TEXT NOT NULL, "
+                + "gender TEXT NOT NULL, "
+                + "course TEXT NOT NULL, "
+                + "marks REAL NOT NULL)";
+
         try (Connection con = DBConnection.getConnection();
              Statement stmt = con.createStatement()) {
             stmt.execute(sql);
@@ -24,23 +25,23 @@ public class StudentDAO {
     }
 
     public boolean addStudent(Student student) {
-      String sql = "INSERT INTO students(id, name, email, gender, course, marks) VALUES(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO students(id, name, email, gender, course, marks) VALUES(?, ?, ?, ?, ?, ?)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(sql)) {
 
-           pst.setInt(1, student.getId());
-           pst.setString(2, student.getName());
-           pst.setString(3, student.getEmail());
-           pst.setString(4, student.getGender());
-           pst.setString(5, student.getCourse());
-           pst.setDouble(6, student.getMarks());
+            pst.setInt(1, student.getId());
+            pst.setString(2, student.getName());
+            pst.setString(3, student.getEmail());
+            pst.setString(4, student.getGender());
+            pst.setString(5, student.getCourse());
+            pst.setDouble(6, student.getMarks());
 
             pst.executeUpdate();
             return true;
         } catch (SQLException e) {
-          javax.swing.JOptionPane.showMessageDialog(null, "Student ID already exists ");
-          return false;
+            javax.swing.JOptionPane.showMessageDialog(null, "Student ID already exists");
+            return false;
         }
     }
 
@@ -54,15 +55,13 @@ public class StudentDAO {
 
             while (rs.next()) {
                 Student student = new Student(
-                       
-        rs.getInt("id"),
-        rs.getString("name"),
-        rs.getString("email"),
-        rs.getString("gender"),
-        rs.getString("course"),
-        rs.getDouble("marks")
-);
-                
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("gender"),
+                        rs.getString("course"),
+                        rs.getDouble("marks")
+                );
                 students.add(student);
             }
         } catch (SQLException e) {
@@ -102,102 +101,105 @@ public class StudentDAO {
             System.out.println("Error deleting student: " + e.getMessage());
         }
     }
+
     public List<Student> searchStudentsByName(String keyword) {
-    List<Student> students = new ArrayList<>();
-    String sql = "SELECT * FROM students WHERE name LIKE ?";
+        List<Student> students = new ArrayList<>();
+        String sql = "SELECT * FROM students WHERE name LIKE ?";
 
-    try (Connection con = DBConnection.getConnection();
-         PreparedStatement pst = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement pst = con.prepareStatement(sql)) {
 
-        pst.setString(1, "%" + keyword + "%");
-        ResultSet rs = pst.executeQuery();
+            pst.setString(1, "%" + keyword + "%");
+            ResultSet rs = pst.executeQuery();
 
-        while (rs.next()) {
-            Student student = new Student(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getString("gender"),
-                    rs.getString("course"),
-                    rs.getDouble("marks")
-            );
-            students.add(student);
+            while (rs.next()) {
+                Student student = new Student(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("gender"),
+                        rs.getString("course"),
+                        rs.getDouble("marks")
+                );
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching students: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.out.println("Error searching students: " + e.getMessage());
+
+        return students;
     }
 
-    return students;
-}
-public List<Student> searchStudents(String keyword, String genderFilter) {
-    List<Student> students = new ArrayList<>();
-    String sql;
-
-    if (genderFilter != null && !genderFilter.isEmpty()) {
-        sql = "SELECT * FROM students WHERE name LIKE ? AND gender = ?";
-    } else {
-        sql = "SELECT * FROM students WHERE name LIKE ?";
-    }
-
-    try (Connection con = DBConnection.getConnection();
-         PreparedStatement pst = con.prepareStatement(sql)) {
-
-        pst.setString(1, "%" + keyword + "%");
+    public List<Student> searchStudents(String keyword, String genderFilter) {
+        List<Student> students = new ArrayList<>();
+        String sql;
 
         if (genderFilter != null && !genderFilter.isEmpty()) {
-            pst.setString(2, genderFilter);
+            sql = "SELECT * FROM students WHERE name LIKE ? AND gender = ?";
+        } else {
+            sql = "SELECT * FROM students WHERE name LIKE ?";
         }
 
-        ResultSet rs = pst.executeQuery();
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement pst = con.prepareStatement(sql)) {
 
-        while (rs.next()) {
-            Student student = new Student(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getString("gender"),
-                    rs.getString("course"),
-                    rs.getDouble("marks")
-            );
-            students.add(student);
+            pst.setString(1, "%" + keyword + "%");
+
+            if (genderFilter != null && !genderFilter.isEmpty()) {
+                pst.setString(2, genderFilter);
+            }
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                Student student = new Student(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("gender"),
+                        rs.getString("course"),
+                        rs.getDouble("marks")
+                );
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching students: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.out.println("Error searching students: " + e.getMessage());
+
+        return students;
     }
 
-    return students;
-}
     public List<Student> getAllStudentsSorted(String sortBy) {
-    List<Student> students = new ArrayList<>();
-    String sql;
+        List<Student> students = new ArrayList<>();
+        String sql;
 
-    if ("name".equals(sortBy)) {
-        sql = "SELECT * FROM students ORDER BY name ASC";
-    } else if ("marks".equals(sortBy)) {
-        sql = "SELECT * FROM students ORDER BY marks ASC";
-    } else {
-        sql = "SELECT * FROM students";
-    }
-
-    try (Connection con = DBConnection.getConnection();
-         Statement stmt = con.createStatement();
-         ResultSet rs = stmt.executeQuery(sql)) {
-
-        while (rs.next()) {
-            Student student = new Student(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getString("gender"),
-                    rs.getString("course"),
-                    rs.getDouble("marks")
-            );
-            students.add(student);
+        if ("name".equals(sortBy)) {
+            sql = "SELECT * FROM students ORDER BY name ASC";
+        } else if ("marks".equals(sortBy)) {
+            sql = "SELECT * FROM students ORDER BY marks ASC";
+        } else {
+            sql = "SELECT * FROM students";
         }
-    } catch (SQLException e) {
-        System.out.println("Error sorting students: " + e.getMessage());
-    }
 
-    return students;
-}
+        try (Connection con = DBConnection.getConnection();
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Student student = new Student(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("gender"),
+                        rs.getString("course"),
+                        rs.getDouble("marks")
+                );
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error sorting students: " + e.getMessage());
+        }
+
+        return students;
+    }
 }

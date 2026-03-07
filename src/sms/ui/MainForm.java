@@ -2,105 +2,98 @@
 package sms.ui;
 import sms.dao.StudentDAO;
 import sms.model.Student;
+import javax.swing.JOptionPane;
 
  
 public class MainForm extends javax.swing.JFrame {
-    
 
-   StudentDAO dao = new StudentDAO();    
+    StudentDAO dao = new StudentDAO();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainForm.class.getName());
 
-    /**
-     * Creates new form MainForm
-     */
     private void clearFields() {
-    txtId.setText("");
-    txtName.setText("");
-    txtEmail.setText("");
-    cmbGender.setSelectedIndex(0);
-    cmbCourse.setSelectedIndex(0);
-    txtMarks.setText("");
-}
-    
+        txtId.setText("");
+        txtName.setText("");
+        txtEmail.setText("");
+        cmbGender.setSelectedIndex(0);
+        cmbCourse.setSelectedIndex(0);
+        txtMarks.setText("");
+    }
+
     private void loadStudents() {
-    javax.swing.table.DefaultTableModel model =
-            (javax.swing.table.DefaultTableModel) tblStudents.getModel();
-    model.setRowCount(0);
+        javax.swing.table.DefaultTableModel model =
+                (javax.swing.table.DefaultTableModel) tblStudents.getModel();
+        model.setRowCount(0);
 
-    for (Student s : dao.getAllStudents()) {
-        model.addRow(new Object[]{
-    s.getId(),
-    s.getName(),
-    s.getEmail(),
-    s.getGender(),
-    s.getCourse(),
-    s.getMarks()
-
-        });
+        for (Student s : dao.getAllStudents()) {
+            model.addRow(new Object[]{
+                s.getId(),
+                s.getName(),
+                s.getEmail(),
+                s.getGender(),
+                s.getCourse(),
+                s.getMarks()
+            });
+        }
     }
-}
    private void searchStudents() {
-    String keyword = txtSearch.getText().trim();
+        String keyword = txtSearch.getText().trim();
 
-    javax.swing.table.DefaultTableModel model =
-            (javax.swing.table.DefaultTableModel) tblStudents.getModel();
-    model.setRowCount(0);
+        javax.swing.table.DefaultTableModel model =
+                (javax.swing.table.DefaultTableModel) tblStudents.getModel();
+        model.setRowCount(0);
 
-    String genderFilter = "";
+        String genderFilter = "";
 
-    if (chkMaleOnly.isSelected() && !chkFemaleOnly.isSelected()) {
-        genderFilter = "Male";
-    } else if (chkFemaleOnly.isSelected() && !chkMaleOnly.isSelected()) {
-        genderFilter = "Female";
+        if (chkMaleOnly.isSelected() && !chkFemaleOnly.isSelected()) {
+            genderFilter = "Male";
+        } else if (chkFemaleOnly.isSelected() && !chkMaleOnly.isSelected()) {
+            genderFilter = "Female";
+        }
+
+        for (Student s : dao.searchStudents(keyword, genderFilter)) {
+            model.addRow(new Object[]{
+                s.getId(),
+                s.getName(),
+                s.getEmail(),
+                s.getGender(),
+                s.getCourse(),
+                s.getMarks()
+            });
+        }
     }
 
-    for (Student s : dao.searchStudents(keyword, genderFilter)) {
-        model.addRow(new Object[]{
-            s.getId(),
-            s.getName(),
-            s.getEmail(),
-            s.getGender(),
-            s.getCourse(),
-            s.getMarks()
-        });
-    }
-}
     private void sortStudents() {
-    String sortBy = "";
+        String sortBy = "";
 
-    if (rdoSortName.isSelected()) {
-        sortBy = "name";
-    } else if (rdoSortMarks.isSelected()) {
-        sortBy = "marks";
+        if (rdoSortName.isSelected()) {
+            sortBy = "name";
+        } else if (rdoSortMarks.isSelected()) {
+            sortBy = "marks";
+        }
+
+        javax.swing.table.DefaultTableModel model =
+                (javax.swing.table.DefaultTableModel) tblStudents.getModel();
+        model.setRowCount(0);
+
+        for (Student s : dao.getAllStudentsSorted(sortBy)) {
+            model.addRow(new Object[]{
+                s.getId(),
+                s.getName(),
+                s.getEmail(),
+                s.getGender(),
+                s.getCourse(),
+                s.getMarks()
+            });
+        }
     }
 
-    javax.swing.table.DefaultTableModel model =
-            (javax.swing.table.DefaultTableModel) tblStudents.getModel();
-    model.setRowCount(0);
-
-    for (Student s : dao.getAllStudentsSorted(sortBy)) {
-        model.addRow(new Object[]{
-            s.getId(),
-            s.getName(),
-            s.getEmail(),
-            s.getGender(),
-            s.getCourse(),
-            s.getMarks()
-        });
+   public MainForm() {
+        initComponents();
+        dao.createTable();
+        lblStatus.setText("Ready");
+      
     }
-}
-    public MainForm() {
-    initComponents();
-    dao.createTable();
-    lblStatus.setText("Ready");
-     
-}
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -108,6 +101,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jMenuItem1 = new javax.swing.JMenuItem();
         buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
         jPanel2 = new javax.swing.JPanel();
         txtId = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -140,6 +134,7 @@ public class MainForm extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         itemExit = new javax.swing.JMenuItem();
+        itemLogout = new javax.swing.JMenuItem();
         mnuStudents = new javax.swing.JMenu();
         itemAdd = new javax.swing.JMenuItem();
         itemUpdate = new javax.swing.JMenuItem();
@@ -392,6 +387,10 @@ public class MainForm extends javax.swing.JFrame {
         itemExit.addActionListener(this::itemExitActionPerformed);
         mnuFile.add(itemExit);
 
+        itemLogout.setText("Log out");
+        itemLogout.addActionListener(this::itemLogoutActionPerformed);
+        mnuFile.add(itemLogout);
+
         jMenuBar1.add(mnuFile);
 
         mnuStudents.setText("Students");
@@ -600,6 +599,12 @@ txtMarks.setText(tblStudents.getValueAt(row, 5).toString());
        lblStatus.setText("Sorted by marks");
     }//GEN-LAST:event_rdoSortMarksActionPerformed
 
+    private void itemLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemLogoutActionPerformed
+       javax.swing.JOptionPane.showMessageDialog(this, "Logged out successfully");
+       new LoginForm().setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_itemLogoutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -633,6 +638,7 @@ txtMarks.setText(tblStudents.getValueAt(row, 5).toString());
     private javax.swing.JButton btnShowAll;
     private javax.swing.JButton btnUpdate;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JCheckBox chkFemaleOnly;
     private javax.swing.JCheckBox chkMaleOnly;
     private javax.swing.JComboBox<String> cmbCourse;
@@ -641,6 +647,7 @@ txtMarks.setText(tblStudents.getValueAt(row, 5).toString());
     private javax.swing.JMenuItem itemAdd;
     private javax.swing.JMenuItem itemDelete;
     private javax.swing.JMenuItem itemExit;
+    private javax.swing.JMenuItem itemLogout;
     private javax.swing.JMenuItem itemUpdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
