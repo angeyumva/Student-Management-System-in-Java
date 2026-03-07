@@ -46,7 +46,33 @@ public class MainForm extends javax.swing.JFrame {
             (javax.swing.table.DefaultTableModel) tblStudents.getModel();
     model.setRowCount(0);
 
-    for (Student s : dao.searchStudentsByName(keyword)) {
+    boolean maleOnly = chkMaleOnly.isSelected();
+
+        for (Student s : dao.searchStudents(keyword, maleOnly))  {
+        model.addRow(new Object[]{
+            s.getId(),
+            s.getName(),
+            s.getEmail(),
+            s.getGender(),
+            s.getCourse(),
+            s.getMarks()
+        });
+    }
+}
+    private void sortStudents() {
+    String sortBy = "";
+
+    if (rdoSortName.isSelected()) {
+        sortBy = "name";
+    } else if (rdoSortMarks.isSelected()) {
+        sortBy = "marks";
+    }
+
+    javax.swing.table.DefaultTableModel model =
+            (javax.swing.table.DefaultTableModel) tblStudents.getModel();
+    model.setRowCount(0);
+
+    for (Student s : dao.getAllStudentsSorted(sortBy)) {
         model.addRow(new Object[]{
             s.getId(),
             s.getName(),
@@ -75,6 +101,7 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jMenuItem1 = new javax.swing.JMenuItem();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel2 = new javax.swing.JPanel();
         txtId = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -97,6 +124,9 @@ public class MainForm extends javax.swing.JFrame {
         txtSearch = new javax.swing.JTextField();
         btnShowAll = new javax.swing.JButton();
         lblStatus = new javax.swing.JLabel();
+        chkMaleOnly = new javax.swing.JCheckBox();
+        rdoSortName = new javax.swing.JRadioButton();
+        rdoSortMarks = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblStudents = new javax.swing.JTable();
@@ -167,11 +197,25 @@ public class MainForm extends javax.swing.JFrame {
 
         lblStatus.setText("Ready");
 
+        chkMaleOnly.setText("Male Only");
+
+        buttonGroup1.add(rdoSortName);
+        rdoSortName.setText("Sort by Name");
+        rdoSortName.addActionListener(this::rdoSortNameActionPerformed);
+
+        buttonGroup1.add(rdoSortMarks);
+        rdoSortMarks.setText("Sort by Marks");
+        rdoSortMarks.addActionListener(this::rdoSortMarksActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(343, 343, 343)
+                .addComponent(lblStatus)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(13, 13, 13)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -190,8 +234,6 @@ public class MainForm extends javax.swing.JFrame {
                                 .addGap(20, 20, 20)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbCourse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -205,14 +247,21 @@ public class MainForm extends javax.swing.JFrame {
                                         .addComponent(txtSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnShowAll)
-                                            .addComponent(btnSearch))
+                                            .addComponent(btnSearch)
+                                            .addComponent(chkMaleOnly))
                                         .addGap(0, 0, Short.MAX_VALUE))))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(txtMarks, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtMarks, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmbCourse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(cmbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblStatus)
-                                .addGap(172, 172, 172))))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(rdoSortMarks)
+                                    .addComponent(rdoSortName))
+                                .addGap(112, 112, 112))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btnAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -220,7 +269,10 @@ public class MainForm extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnDelete)
                         .addGap(18, 18, 18)
-                        .addComponent(btnClear)))
+                        .addComponent(btnClear)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnShowAll)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(29, 29, 29))
         );
         jPanel2Layout.setVerticalGroup(
@@ -247,29 +299,33 @@ public class MainForm extends javax.swing.JFrame {
                             .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(btnShowAll)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(7, 7, 7)
+                        .addComponent(chkMaleOnly)))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cmbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel4)
+                    .addComponent(rdoSortName, javax.swing.GroupLayout.Alignment.LEADING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(rdoSortMarks)
+                .addGap(1, 1, 1)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cmbCourse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(txtMarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6))
-                    .addComponent(lblStatus))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtMarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAdd)
                     .addComponent(btnUpdate)
                     .addComponent(btnDelete)
-                    .addComponent(btnClear))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnClear)
+                    .addComponent(btnShowAll))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addComponent(lblStatus)
+                .addGap(21, 21, 21))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Student Records"));
@@ -306,7 +362,7 @@ public class MainForm extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 842, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -354,19 +410,19 @@ public class MainForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(15, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -518,6 +574,16 @@ txtMarks.setText(tblStudents.getValueAt(row, 5).toString());
     lblStatus.setText("All students displayed");
     }//GEN-LAST:event_btnShowAllActionPerformed
 
+    private void rdoSortNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoSortNameActionPerformed
+       sortStudents();
+       lblStatus.setText("Sorted by name");
+    }//GEN-LAST:event_rdoSortNameActionPerformed
+
+    private void rdoSortMarksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoSortMarksActionPerformed
+       sortStudents();
+       lblStatus.setText("Sorted by marks");
+    }//GEN-LAST:event_rdoSortMarksActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -550,6 +616,8 @@ txtMarks.setText(tblStudents.getValueAt(row, 5).toString());
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnShowAll;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JCheckBox chkMaleOnly;
     private javax.swing.JComboBox<String> cmbCourse;
     private javax.swing.JComboBox<String> cmbGender;
     private javax.swing.JMenuItem itemAbout;
@@ -574,6 +642,8 @@ txtMarks.setText(tblStudents.getValueAt(row, 5).toString());
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenu mnuStudents;
+    private javax.swing.JRadioButton rdoSortMarks;
+    private javax.swing.JRadioButton rdoSortName;
     private javax.swing.JTable tblStudents;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtId;

@@ -129,4 +129,70 @@ public class StudentDAO {
 
     return students;
 }
+    public List<Student> searchStudents(String keyword, boolean maleOnly) {
+    List<Student> students = new ArrayList<>();
+    String sql;
+
+    if (maleOnly) {
+        sql = "SELECT * FROM students WHERE name LIKE ? AND gender = 'Male'";
+    } else {
+        sql = "SELECT * FROM students WHERE name LIKE ?";
+    }
+
+    try (Connection con = DBConnection.getConnection();
+         PreparedStatement pst = con.prepareStatement(sql)) {
+
+        pst.setString(1, "%" + keyword + "%");
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+            Student student = new Student(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("gender"),
+                    rs.getString("course"),
+                    rs.getDouble("marks")
+            );
+            students.add(student);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error searching students: " + e.getMessage());
+    }
+
+    return students;
+}
+    public List<Student> getAllStudentsSorted(String sortBy) {
+    List<Student> students = new ArrayList<>();
+    String sql;
+
+    if ("name".equals(sortBy)) {
+        sql = "SELECT * FROM students ORDER BY name ASC";
+    } else if ("marks".equals(sortBy)) {
+        sql = "SELECT * FROM students ORDER BY marks ASC";
+    } else {
+        sql = "SELECT * FROM students";
+    }
+
+    try (Connection con = DBConnection.getConnection();
+         Statement stmt = con.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+
+        while (rs.next()) {
+            Student student = new Student(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("gender"),
+                    rs.getString("course"),
+                    rs.getDouble("marks")
+            );
+            students.add(student);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error sorting students: " + e.getMessage());
+    }
+
+    return students;
+}
 }
