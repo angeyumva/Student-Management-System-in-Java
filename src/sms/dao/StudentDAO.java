@@ -102,4 +102,31 @@ public class StudentDAO {
             System.out.println("Error deleting student: " + e.getMessage());
         }
     }
+    public List<Student> searchStudentsByName(String keyword) {
+    List<Student> students = new ArrayList<>();
+    String sql = "SELECT * FROM students WHERE name LIKE ?";
+
+    try (Connection con = DBConnection.getConnection();
+         PreparedStatement pst = con.prepareStatement(sql)) {
+
+        pst.setString(1, "%" + keyword + "%");
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+            Student student = new Student(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("gender"),
+                    rs.getString("course"),
+                    rs.getDouble("marks")
+            );
+            students.add(student);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error searching students: " + e.getMessage());
+    }
+
+    return students;
+}
 }
