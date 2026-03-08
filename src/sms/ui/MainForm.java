@@ -455,9 +455,23 @@ if (idText.isEmpty() || name.isEmpty() || email.isEmpty() || marksText.isEmpty()
     return;
 }
 
+double marks;
+    try {
+        marks = Double.parseDouble(marksText);
+    } catch (NumberFormatException e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Marks must be a valid number");
+        txtMarks.requestFocus();
+        return;
+    }
+
+    if (marks < 0 || marks > 100) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Marks must be between 0 and 100");
+        txtMarks.requestFocus();
+        return;
+    }
+
 int id = Integer.parseInt(idText);
 String gender = cmbGender.getSelectedItem().toString();
-double marks = Double.parseDouble(marksText);
 Student student = new Student(id, name, email, gender, course, marks);
 boolean added = dao.addStudent(student);
 
@@ -523,12 +537,26 @@ if (marksText.isEmpty()) {
     return;
 }
 
+double marks;
+    try {
+        marks = Double.parseDouble(marksText);
+    } catch (NumberFormatException e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Marks must be a valid number");
+        txtMarks.requestFocus();
+        return;
+    }
+
+    if (marks < 0 || marks > 100) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Marks must be between 0 and 100");
+        txtMarks.requestFocus();
+        return;
+    }
+
 int id = Integer.parseInt(idText);
 String name = txtName.getText();
 String email = txtEmail.getText().trim();
 String gender = cmbGender.getSelectedItem().toString();
 String course = cmbCourse.getSelectedItem().toString();
-double marks = Double.parseDouble(marksText);
 
 Student student = new Student(id, name, email, gender, course, marks);
 dao.updateStudent(student);
