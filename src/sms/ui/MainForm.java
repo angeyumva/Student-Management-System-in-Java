@@ -583,12 +583,7 @@ txtMarks.setText(tblStudents.getValueAt(row, 5).toString());
     }//GEN-LAST:event_itemExitActionPerformed
 
     private void itemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemAboutActionPerformed
-       javax.swing.JOptionPane.showMessageDialog(
-    this,
-    "Student Management System\nDeveloped in Java Swing with SQLite.",
-    "About",
-    javax.swing.JOptionPane.INFORMATION_MESSAGE
-);
+       new About().setVisible(true);
     }//GEN-LAST:event_itemAboutActionPerformed
 
     private void itemAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemAddActionPerformed
