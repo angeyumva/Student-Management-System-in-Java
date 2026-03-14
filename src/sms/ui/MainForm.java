@@ -524,23 +524,21 @@ javax.swing.JOptionPane.showMessageDialog(this, "Student deleted successfully");
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
 if (tblStudents.getSelectedRow() == -1) {
-    javax.swing.JOptionPane.showMessageDialog(this, "Select a student from the table first");
-    return;
-}
-        String idText = txtId.getText().trim();
-        String marksText = txtMarks.getText().trim();
+        javax.swing.JOptionPane.showMessageDialog(this, "Select a student from the table first");
+        return;
+    }
 
-if (idText.isEmpty()) {
-    javax.swing.JOptionPane.showMessageDialog(this, "Enter Student ID first");
-    return;
-}
+    String idText = txtId.getText().trim();
+    String name = txtName.getText().trim();
+    String email = txtEmail.getText().trim();
+    String marksText = txtMarks.getText().trim();
 
-if (marksText.isEmpty()) {
-    javax.swing.JOptionPane.showMessageDialog(this, "Enter Marks first");
-    return;
-}
+    if (idText.isEmpty() || name.isEmpty() || email.isEmpty() || marksText.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields");
+        return;
+    }
 
-double marks;
+    double marks;
     try {
         marks = Double.parseDouble(marksText);
     } catch (NumberFormatException e) {
@@ -549,25 +547,29 @@ double marks;
         return;
     }
 
-    if (marks < 0 || marks > 100) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Marks must be between 0 and 100");
+    if (marks < 0) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Marks cannot be less than 0");
         txtMarks.requestFocus();
         return;
     }
 
-int id = Integer.parseInt(idText);
-String name = txtName.getText();
-String email = txtEmail.getText().trim();
-String gender = cmbGender.getSelectedItem().toString();
-String course = cmbCourse.getSelectedItem().toString();
+    if (marks > 100) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Marks cannot exceed 100");
+        txtMarks.requestFocus();
+        return;
+    }
 
-Student student = new Student(id, name, email, gender, course, marks);
-dao.updateStudent(student);
-loadStudents();
-clearFields();
+    int id = Integer.parseInt(idText);
+    String gender = cmbGender.getSelectedItem().toString();
+    String course = cmbCourse.getSelectedItem().toString();
 
-lblStatus.setText("Student updated successfully");
-javax.swing.JOptionPane.showMessageDialog(this, "Student updated successfully");
+    Student student = new Student(id, name, email, gender, course, marks);
+    dao.updateStudent(student);
+    loadStudents();
+    clearFields();
+
+    lblStatus.setText("Student updated successfully");
+    javax.swing.JOptionPane.showMessageDialog(this, "Student updated successfully");
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void tblStudentsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblStudentsMouseClicked
