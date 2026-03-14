@@ -150,40 +150,46 @@ public class MainForm extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Student Details"));
 
+        txtId.setBackground(new java.awt.Color(204, 204, 255));
         txtId.setText(" ");
 
         jLabel2.setText(" Student ID");
 
+        txtName.setBackground(new java.awt.Color(204, 204, 255));
         txtName.setText(" ");
 
         jLabel3.setText("Name");
 
+        txtEmail.setBackground(new java.awt.Color(204, 204, 255));
         txtEmail.setText(" ");
 
         jLabel7.setText("Email");
 
+        cmbGender.setBackground(new java.awt.Color(204, 204, 255));
         cmbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female" }));
 
         jLabel4.setText("Gender");
 
+        cmbCourse.setBackground(new java.awt.Color(204, 204, 255));
         cmbCourse.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Java", "DBMS", "Networking", "Mathematics" }));
 
         jLabel5.setText(" Course");
 
+        txtMarks.setBackground(new java.awt.Color(204, 204, 255));
         txtMarks.setText(" ");
         txtMarks.addActionListener(this::txtMarksActionPerformed);
 
         jLabel6.setText("Marks");
 
-        btnAdd.setBackground(new java.awt.Color(0, 153, 153));
+        btnAdd.setBackground(new java.awt.Color(0, 153, 0));
         btnAdd.setText("Add");
         btnAdd.addActionListener(this::btnAddActionPerformed);
 
-        btnUpdate.setBackground(new java.awt.Color(255, 204, 0));
+        btnUpdate.setBackground(new java.awt.Color(0, 204, 204));
         btnUpdate.setText("Update");
         btnUpdate.addActionListener(this::btnUpdateActionPerformed);
 
-        btnDelete.setBackground(new java.awt.Color(204, 0, 0));
+        btnDelete.setBackground(new java.awt.Color(255, 0, 0));
         btnDelete.setText("Delete");
         btnDelete.addActionListener(this::btnDeleteActionPerformed);
 
@@ -196,9 +202,10 @@ public class MainForm extends javax.swing.JFrame {
 
         lblSearch.setText("Search");
 
+        txtSearch.setBackground(new java.awt.Color(204, 204, 255));
         txtSearch.setText(" ");
 
-        btnShowAll.setBackground(new java.awt.Color(51, 102, 255));
+        btnShowAll.setBackground(new java.awt.Color(255, 204, 0));
         btnShowAll.setText("Show All");
         btnShowAll.addActionListener(this::btnShowAllActionPerformed);
 

@@ -76,6 +76,7 @@
       <SubComponents>
         <Component class="javax.swing.JTextArea" name="jTextArea1">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
             <Property name="text" type="java.lang.String" value="This application is designed to manage student records . &#xa;It allows users to add, update, delete, search, and sort student data efficiently.&#xa;&#xa;Main Features:&#xa;- Add new students&#xa;- Update student information&#xa;- Delete student records&#xa;- Search students&#xa;- Filter by gender&#xa;- Sort by name and marks&#xa;- Login and logout functionality&#xa;&#xa;Technologies Used:&#xa;- Java&#xa;- Java Swing&#xa;- SQLite Database&#xa;- JDBC&#xa;- NetBeans IDE&#xa;"/>

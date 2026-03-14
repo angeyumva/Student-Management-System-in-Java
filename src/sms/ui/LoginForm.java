@@ -54,9 +54,12 @@ public class LoginForm extends javax.swing.JFrame {
 
         jLabel2.setText("Password");
 
+        txtUsername.setBackground(new java.awt.Color(204, 204, 255));
         txtUsername.setText(" ");
 
-        btnLogin.setBackground(new java.awt.Color(102, 102, 0));
+        txtPassword.setBackground(new java.awt.Color(204, 204, 255));
+
+        btnLogin.setBackground(new java.awt.Color(102, 255, 0));
         btnLogin.setText(" Login");
         btnLogin.addActionListener(this::btnLoginActionPerformed);
 
@@ -71,8 +74,6 @@ public class LoginForm extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setText("Student Management Login");
-
-        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\User\\Downloads\\student.png")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

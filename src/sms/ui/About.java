@@ -38,6 +38,7 @@ public class About extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Student Management System");
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jTextArea1.setText("This application is designed to manage student records . \nIt allows users to add, update, delete, search, and sort student data efficiently.\n\nMain Features:\n- Add new students\n- Update student information\n- Delete student records\n- Search students\n- Filter by gender\n- Sort by name and marks\n- Login and logout functionality\n\nTechnologies Used:\n- Java\n- Java Swing\n- SQLite Database\n- JDBC\n- NetBeans IDE\n");
