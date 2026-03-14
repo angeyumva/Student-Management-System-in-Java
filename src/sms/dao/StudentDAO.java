@@ -130,24 +130,44 @@ public class StudentDAO {
         return students;
     }
 
-    public List<Student> searchStudents(String keyword, String genderFilter) {
+    public List<Student> searchStudents(String keyword, String searchBy) {
         List<Student> students = new ArrayList<>();
+        String column = "name";
+
+        if (searchBy.equalsIgnoreCase("ID")) {
+            column = "id";
+        } else if (searchBy.equalsIgnoreCase("Name")) {
+            column = "name";
+        } else if (searchBy.equalsIgnoreCase("Email")) {
+            column = "email";
+        } else if (searchBy.equalsIgnoreCase("Gender")) {
+            column = "gender";
+        } else if (searchBy.equalsIgnoreCase("Course")) {
+            column = "course";
+        }
+
         String sql;
 
-        if (genderFilter != null && !genderFilter.isEmpty()) {
-            sql = "SELECT * FROM students WHERE name LIKE ? AND gender = ?";
+        if (column.equals("id")) {
+            sql = "SELECT * FROM students WHERE id = ?";
+        } else if (column.equals("gender")) {
+            sql = "SELECT * FROM students WHERE LOWER(gender) = LOWER(?)";
         } else {
-            sql = "SELECT * FROM students WHERE name LIKE ?";
+            sql = "SELECT * FROM students WHERE " + column + " LIKE ?";
         }
+
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(sql)) {
 
-            pst.setString(1, "%" + keyword + "%");
-
-            if (genderFilter != null && !genderFilter.isEmpty()) {
-                pst.setString(2, genderFilter);
+            if (column.equals("id")) {
+               pst.setInt(1, Integer.parseInt(keyword));
+            } else if (column.equals("gender")) {
+               pst.setString(1, keyword.trim());
+            } else {
+               pst.setString(1, "%" + keyword + "%");
             }
+
 
             ResultSet rs = pst.executeQuery();
 
@@ -162,6 +182,8 @@ public class StudentDAO {
                 );
                 students.add(student);
             }
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(null, "ID must be a number");
         } catch (SQLException e) {
             System.out.println("Error searching students: " + e.getMessage());
         }
