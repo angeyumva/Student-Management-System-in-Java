@@ -69,7 +69,14 @@ The `students` table stores:
 1. Open the project in **NetBeans**.
 2. Make sure the SQLite JDBC library is added to the project libraries.
 3. Build the project.
-4. Run the project starting from the login form.
+4. Run the project starting from the login form:
+
+## Login
+
+On login page , use credentials
+Username: admin
+Password: 1234
+   
 
 ## Main Functionalities
 
@@ -110,13 +117,10 @@ Displays information about the application, features, and technologies used.
 **YUMVAGUSENGA Ange**
 
 **IGIRANEZA Kevin**
+.
+## Login
 
-## Notes
-
-This project was developed for academic purposes and demonstrates the use of:
-
-* Object-Oriented Programming
-* Java GUI development with Swing
-* Database connectivity using JDBC
-* CRUD operations in a desktop application
+On login page , use credentials
+Username: admin
+Password: 1234
 
